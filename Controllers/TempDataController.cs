@@ -27,7 +27,7 @@ namespace WebApplication1.Controllers
         {
             if (_context.tempDatas.Count() == 0)
             {
-                _context.tempDatas.Add(new TempData {Temperature="24",Humidity="55%" });
+                _context.tempDatas.Add(new TempData {ReadingDateTime=DateTime.Now, AssetName="FOO", DeviceName="Fake",ReadingData=2019 });
                 _context.SaveChanges();
             }
             return _context.tempDatas;
@@ -39,7 +39,7 @@ namespace WebApplication1.Controllers
         {
             if (_context.tempDatas.Count() == 0)
             {
-                _context.tempDatas.Add(new TempData { Temperature = "30", Humidity = "57%" });
+                _context.tempDatas.Add(new TempData { ReadingDateTime = DateTime.Now, AssetName = "FOO", DeviceName = "Fake", ReadingData = 2020 });
                 _context.SaveChanges();
             }
             var maximunData= _context.tempDatas.Max(t => t.Id);
@@ -100,19 +100,40 @@ namespace WebApplication1.Controllers
 
             return NoContent();
         }
-
         // POST: api/TempData
         [HttpPost]
-        public async Task<IActionResult> PostTempData([FromBody] TempData tempData)
+        public async Task<IActionResult> PostTempData([FromBody] List<TempData> MyList)
         {
+
+
+            List<NewAction2> _newActions = new List<NewAction2>();
+            
+            if (_context.NewActions.Count()==0)
+            {
+                _context.NewActions.Add(new NewAction() {ActionDateTime= "2019-03-27 16:40:00 PM", ActinoName="Off" });
+                _context.SaveChanges();
+            }
+            var newAction = _context.NewActions.FirstOrDefault();
+            if (newAction.ActinoName == "On")
+                newAction.ActinoName = "Off";
+            else
+                newAction.ActinoName = "On";
+            _context.SaveChanges();
+            var newAction2 = new NewAction2() { ActionName = newAction.ActinoName, ActionDateTime = "2019-03-27 16:40:00 PM" };
+            _newActions.Add(newAction2);
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            _context.tempDatas.Add(tempData);
-            await _context.SaveChangesAsync();
+            foreach(var tempData in MyList)
+            {
+                _context.tempDatas.Add(tempData);
+                await _context.SaveChangesAsync();
+            }
+            
 
-            if (_context.tempDatas.Count() > 50)
+            while (_context.tempDatas.Count() > 50)
             {
                 var maximunData = _context.tempDatas.Min(t => t.Id);
                 var item = _context.tempDatas.Where(t => t.Id == maximunData).FirstOrDefault();
@@ -122,7 +143,7 @@ namespace WebApplication1.Controllers
 
 
             //return CreatedAtAction("GetTempData", new { id = tempData.Id }, tempData);
-            return Ok();
+            return Ok(_newActions);
         }
 
         // DELETE: api/TempData/5

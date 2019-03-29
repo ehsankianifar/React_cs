@@ -20,16 +20,20 @@ export class FetchData extends Component {
                 <thead>
                     <tr>
                         <th>Id</th>
-                        <th>Temp. (C)</th>
-                        <th>Humidity (%)</th>
+                        <th>Date and time</th>
+                        <th>Raspberry pi</th>
+                        <th>Sensor Name</th>
+                        <th>Reading data</th>
                     </tr>
                 </thead>
                 <tbody>
                     {forecasts.map(forecast =>
                         <tr key={forecast.id}>
                             <td>{forecast.id}</td>
-                            <td>{forecast.temperature}</td>
-                            <td>{forecast.humidity}</td>
+                            <td>{forecast.readingDateTime}</td>
+                            <td>{forecast.assetName}</td>
+                            <td>{forecast.deviceName}</td>
+                            <td>{forecast.readingData}</td>
                         </tr>
                     )}
                 </tbody>

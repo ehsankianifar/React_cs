@@ -6,7 +6,7 @@ export class Home extends Component {
   render() {
     return (
       <div>
-        <h1>Fild data view web app</h1>
+        <h1>Field data view web app</h1>
         <p>Welcome to the data view application</p>
         
       </div>
